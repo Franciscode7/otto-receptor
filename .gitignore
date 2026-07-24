@@ -3,7 +3,12 @@ venv/
 .venv/
 env/
 
+bot.log
+
+__pycache__/
 .env
+
+*.pyc
 
 receptor22.py
 receptor33.py
