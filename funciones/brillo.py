@@ -11,6 +11,6 @@ def ajustar_brillo(nivel):
     except Exception as e:
         # ¡ESTO ES LO IMPORTANTE! 
         # Escribe el error real en un archivo de texto para que puedas leerlo
-        with open(r"C:\agenteserver\error_brillo.txt", "a") as f:
-            f.write(f"Error con valor {nivel}: {str(e)}\n")
+        # with open(r"C:\agenteserver\error_brillo.txt", "a") as f:
+        #     f.write(f"Error con valor {nivel}: {str(e)}\n")
         return False

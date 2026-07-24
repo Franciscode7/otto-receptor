@@ -74,15 +74,13 @@ def recibir_orden():
 
     elif accion == "nota":
         if valor: # Verificamos que el usuario envió una URL
-            exito = escribir_nota(valor)
+            exito, nota_escrita = escribir_nota(valor)
             if exito:
-                time.sleep(1) 
-                cerrar_app("Notepad") # Esperamos un segundo antes de responder
-                return jsonify({"status": "ok", "msg": f"Nota escrita: {valor}"}), 200
+                return jsonify({"status": "ok", "msg": f"Nota guardada: {nota_escrita}"}), 200
             else:
                 return jsonify({"status": "error", "msg": "No se pudo escribir la nota"}), 500
         else:
-            return jsonify({"status": "error", "msg": "Falta el valor (URL)"}), 400
+            return jsonify({"status": "error", "msg": "Falta el valor"}), 400
 
 
     elif accion == "abrir_app":

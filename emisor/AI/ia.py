@@ -57,7 +57,7 @@ def ottochat(mensaje: str, prompt_entrada: str):
     
     try:
         respuesta = client.chat.completions.create(
-            model="deepseek-chat",
+            model="deepseek-v4-flash",
             # Aquí metemos el sistema y tu mensaje directo sin depender de variables externas
             messages=[
                 {"role": "system", "content": prompt},
@@ -86,7 +86,7 @@ def otto(mensaje: str, prompt_entrada: str ):
     
     try:
         respuesta = client.chat.completions.create(
-            model="deepseek-chat",
+            model="deepseek-v4-flash",
             # Aquí metemos el sistema y tu mensaje directo sin depender de variables externas
             messages=[
                 {"role": "system", "content": prompt},
@@ -113,6 +113,6 @@ def otto(mensaje: str, prompt_entrada: str ):
         print(f"❌ Error al conectar con Otto: {e}")
         return None
 
-if __name__ == "__main__":
-    otto("crea una funcion de suma en js", system_prompt())
+# if __name__ == "__main__":
+#     otto("crea una funcion de suma en js", system_prompt())
     

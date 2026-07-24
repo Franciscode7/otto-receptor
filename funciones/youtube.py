@@ -1,39 +1,43 @@
-import urllib.request
-import urllib.parse
-import re
+from yt_dlp import YoutubeDL
 import webbrowser
 
-def buscar_youtube(nombre_video):
-    try:
-        print(f"[YouTube] Buscando: {nombre_video}")
-        
-        # Codificamos el texto para la URL (ej: "Rick+Astley...")
-        query_string = urllib.parse.urlencode({"search_query": nombre_video})
-        url_busqueda = f"https://www.youtube.com/results?{query_string}"
-        
-        # Hacemos la petición nativa imitando un navegador común
-        headers = {'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64)'}
-        req = urllib.request.Request(url_busqueda, headers=headers)
-        
-        with urllib.request.urlopen(req) as response:
-            html = response.read().decode()
-            
-        # Buscamos los IDs de los videos en el HTML mediante una expresión regular rápida
-        video_ids = re.findall(r"watch\?v=(\S{11})", html)
-        
-        if video_ids:
-            # Tomamos el primer resultado que encuentre
-            url_final = f"https://www.youtube.com/watch?v={video_ids[0]}"
-            
-            print(f"[OK] Video encontrado con éxito.")
-            webbrowser.open(url_final)
-            return True, "Video abierto en el navegador"
-        else:
-            return False, "No se encontraron resultados en el HTML."
-            
-    except Exception as e:
-        print(f"[DEBUG ERROR] Detalle: {str(e)}")
-        return False, str(e)
+def buscar_youtube(nombre_cancion: str) -> dict | None:
+    """
+    Busca una canción en YouTube y devuelve el título y el enlace del primer resultado.
+    """
+    # Configuración para extraer solo la información sin descargar el video
+    ydl_opts = {
+        'format': 'best',
+        'quiet': True,
+        'noplaylist': True,
+        'default_search': 'ytsearch1',  # Busca y devuelve solo 1 resultado
+    }
 
+    try:
+        with YoutubeDL(ydl_opts) as ydl:
+            # Realizamos la búsqueda
+            info = ydl.extract_info(f"ytsearch1:{nombre_cancion}", download=False)
+            
+            if 'entries' in info and len(info['entries']) > 0:
+                video = info['entries'][0]
+                titulo = video.get('title')
+                url = video.get('webpage_url')
+                webbrowser.open(url)
+                return True, titulo
+    except Exception as e:
+        print(f"Error al realizar la búsqueda: {e}")
+        return None
+
+    return None
+
+# --- Ejemplo de uso ---
 if __name__ == "__main__":
-    buscar_youtube("sometimes de ariana grande")
+    busqueda = "Bohemian Rhapsody Queen"
+    resultado = buscar_youtube(busqueda)
+
+    if resultado:
+        print("🎵 Canción encontrada:")
+        print(f"Título: {resultado['titulo']}")
+        print(f"URL: {resultado['url']}")
+    else:
+        print("No se encontraron resultados.")
