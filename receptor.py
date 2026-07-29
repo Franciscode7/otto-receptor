@@ -103,6 +103,34 @@ def recibir_orden():
                 return jsonify({"status": "error", "msg": "No se pudo cerrar la app"}), 500
         else:
             return jsonify({"status": "error", "msg": "Falta el valor (URL)"}), 400
+        
+        
+        
+    elif accion == "trabajar":
+            if valor: # Verificamos que el usuario envió un valor
+                buscar_youtube("safety net live ariana grande")
+                exito = vscode(valor)
+                if exito:
+                    return jsonify({"status": "ok", "msg": f"🤖 Todo preparado, Se abrió: D:/developer/{valor}"}), 200
+                else:
+                    return jsonify({"status": "error", "msg": "No se pudo procesar"}), 500
+            else:
+                return jsonify({"status": "error", "msg": "Falta el valor"}), 400
+            
+            
+            
+    elif accion == "crear_py":
+            if valor: # Verificamos que el usuario envió un valor
+                exito = crear_python(valor)
+                if exito:
+                    print ("logrado")
+                    return jsonify({"status": "ok", "msg": f"Scrpt creado: {valor}"}), 200
+                else:
+                    return jsonify({"status": "error", "msg": "No se pudo crear el archivo"}), 500
+            else:
+                return jsonify({"status": "error", "msg": "Falta el valor"}), 400
+            
+            
 
 if __name__ == '__main__':
     # Ejecuta la terminal como ADMINISTRADOR para que te deje usar el puerto 7777

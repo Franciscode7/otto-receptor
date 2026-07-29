@@ -6,3 +6,5 @@ from .brillo import ajustar_brillo
 from .nota import escribir_nota
 from .abrirApp import abrir_app
 from .cerrarApp import cerrar_app
+from .trabajar import vscode
+from .crear_py import crear_python
