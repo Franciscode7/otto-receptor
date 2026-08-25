@@ -22,8 +22,9 @@ def buscar_youtube(nombre_cancion: str) -> dict | None:
                 video = info['entries'][0]
                 titulo = video.get('title')
                 url = video.get('webpage_url')
-                webbrowser.open(url)
-                return True, titulo
+                if titulo and url:
+                    webbrowser.open(url)
+                    return True, titulo
     except Exception as e:
         print(f"Error al realizar la búsqueda: {e}")
         return None
@@ -32,7 +33,7 @@ def buscar_youtube(nombre_cancion: str) -> dict | None:
 
 # --- Ejemplo de uso ---
 if __name__ == "__main__":
-    busqueda = "Bohemian Rhapsody Queen"
+    busqueda = "made you love me ariana grande"
     resultado = buscar_youtube(busqueda)
 
     if resultado:
