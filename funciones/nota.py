@@ -1,6 +1,4 @@
 from datetime import datetime, date
-# from pywinauto import Application, Desktop
-# import pyautogui
 import time
 import os
 from dotenv import load_dotenv

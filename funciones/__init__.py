@@ -8,3 +8,5 @@ from .abrirApp import abrir_app
 from .cerrarApp import cerrar_app
 from .trabajar import vscode
 from .crear_py import crear_python
+from .screenshot import capturar_pantalla
+from .pausar import pausar_youtube, siguiente_cancion

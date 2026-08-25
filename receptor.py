@@ -1,4 +1,4 @@
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify, send_file
 import os
 import subprocess
 import datetime
@@ -41,12 +41,28 @@ def recibir_orden():
             return jsonify({"status": "error", "msg": "Falta el valor (URL)"}), 400
 
     elif accion == "youtube":
-        if valor:
-            exito, detalle = buscar_youtube(valor)
-            if exito:
-                return jsonify({"status": "ok", "msg": f"Reproduciendo: {detalle}"}), 200
+        if valor: # Verificamos que el usuario envió una URL
+            if valor == "pausar":
+                exito = pausar_youtube() 
+                print(f"Pausando reproducción de YouTube: {exito}")
+                if exito:
+                    return jsonify({"status": "ok", "msg": "Reproducción pausada"}), 200
+                else:
+                    return jsonify({"status": "error", "msg": "No se pudo pausar la reproducción"}), 404
+                
             else:
-                return jsonify({"status": "error", "msg": detalle}), 404
+                exito, detalle = buscar_youtube(valor)
+                print('exito')
+                print(exito)
+                print('detalle')
+                print(detalle)
+                time.sleep(0.5)  # Espera un segundo antes de intentar poner la canción
+                pausar_youtube()  # Pausa cualquier reproducción actual
+                time.sleep(0.5)  # Espera un segundo antes de poner la nueva
+                if exito:
+                    return jsonify({"status": "ok", "msg": f"Reproduciendo: {detalle}"}), 200
+                else:
+                    return jsonify({"status": "error", "msg": detalle}), 404
         else:
             return jsonify({"status": "error", "msg": "Falta el nombre del video"}), 400
 
@@ -109,6 +125,7 @@ def recibir_orden():
     elif accion == "trabajar":
             if valor: # Verificamos que el usuario envió un valor
                 buscar_youtube("safety net live ariana grande")
+                time.sleep(1)
                 exito = vscode(valor)
                 if exito:
                     return jsonify({"status": "ok", "msg": f"🤖 Todo preparado, Se abrió: D:/developer/{valor}"}), 200
@@ -120,17 +137,34 @@ def recibir_orden():
             
             
     elif accion == "crear_py":
-            if valor: # Verificamos que el usuario envió un valor
-                exito = crear_python(valor)
-                if exito:
-                    print ("logrado")
-                    return jsonify({"status": "ok", "msg": f"Scrpt creado: {valor}"}), 200
-                else:
-                    return jsonify({"status": "error", "msg": "No se pudo crear el archivo"}), 500
+        if valor: # Verificamos que el usuario envió un valor
+            exito = crear_python(valor)
+            if exito:
+                print ("logrado")
+                return jsonify({"status": "ok", "msg": f"Scrpt creado: {valor}"}), 200
             else:
-                return jsonify({"status": "error", "msg": "Falta el valor"}), 400
+                return jsonify({"status": "error", "msg": "No se pudo crear el archivo"}), 500
+        else:
+            return jsonify({"status": "error", "msg": "Falta el valor"}), 400
             
             
+    elif accion == "screenshot":
+        if valor: # Verificamos que el usuario envió un valor
+            exito, img_base64 = capturar_pantalla()
+        
+            if exito:
+                return jsonify({
+                    "status": "ok",
+                    "type": "image_base64",
+                    "image_base64": img_base64,
+                    "msg": "Captura realizada correctamente"
+                }), 200
+            
+            else:
+                return jsonify({"status": "error", "msg": "No se pudo realizar la captura de pantalla"}), 500         
+        
+        else:
+            return jsonify({"status": "error", "msg": "Falta el valor"}), 400    
 
 if __name__ == '__main__':
     # Ejecuta la terminal como ADMINISTRADOR para que te deje usar el puerto 7777
