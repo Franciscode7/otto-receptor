@@ -2,10 +2,17 @@ import keyboard
 
 
 def pausar_youtube():
-  # Simula la tecla 'k' o la tecla multimedia de pausa/reproducción
-  # Nota: si usas la tecla multimedia de play/pause global, suele funcionar directo con YouTube en Chrome/Firefox
-  keyboard.send("play/pause media")
-  return True  # Indica que la acción se ejecutó (aunque no podemos verificar si YouTube estaba reproduciendo)
+  try:
+    keyboard.send("play/pause media")
+    resultado = "Accion de pausa/reproducir aplicada"
+      
+    return True, resultado  
+  
+  except:
+    resultado = "Error accion en la pausa/reproduccion"
+    
+    return True, resultado
+    
 
 
 def siguiente_cancion():

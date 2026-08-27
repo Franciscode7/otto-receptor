@@ -1,4 +1,4 @@
-from datetime import datetime, date
+from datetime import datetime
 import time
 import os
 from dotenv import load_dotenv
@@ -16,12 +16,12 @@ def escribir_nota(texto):
         with open(NOTA_PATH, "a", encoding="utf-8") as f:
             f.write(linea)
             
-        print(f"[NOTA GUARDADA] {linea.strip()}")
-        return True, texto
+        resultado = f"Nota guardado {texto}"
+        return True, resultado
     
     except Exception as e:
-        print(f"[ERROR NOTA] {e}")
-        return False
+        resultado = f"Error al crear nota {e}"
+        return False, resultado
     
 if __name__ == "__main__":
     texto = "webhu"

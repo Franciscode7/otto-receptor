@@ -1,10 +1,10 @@
 from yt_dlp import YoutubeDL
 import webbrowser
+from .pausar import pausar_youtube, siguiente_cancion
+import time
 
 def buscar_youtube(nombre_cancion: str) -> dict | None:
-    """
-    Busca una canción en YouTube y devuelve el título y el enlace del primer resultado.
-    """
+    
     # Configuración para extraer solo la información sin descargar el video
     ydl_opts = {
         'format': 'best',
@@ -23,13 +23,18 @@ def buscar_youtube(nombre_cancion: str) -> dict | None:
                 titulo = video.get('title')
                 url = video.get('webpage_url')
                 if titulo and url:
+                    time.sleep(0.5)  # Espera un poco antes de intentar poner la canción
+                    pausar_youtube()  # Pausa cualquier reproducción actual
+                    time.sleep(0.5)  # Espera un poco antes de poner la nueva
                     webbrowser.open(url)
                     return True, titulo
+                
     except Exception as e:
-        print(f"Error al realizar la búsqueda: {e}")
-        return None
+        resultado = f"Error al realizar la búsqueda: {e}"
+        return False, resultado
 
     return None
+
 
 # --- Ejemplo de uso ---
 if __name__ == "__main__":
