@@ -1,9 +1,7 @@
 import webbrowser
 
 def abrir_enlace(url):
-    """
-    Intenta abrir una URL en el navegador predeterminado del sistema.
-    """
+
     try:
         # Verificamos si la URL empieza con http, si no, se lo agregamos
         if not url.startswith(("http://", "https://")):
@@ -13,12 +11,12 @@ def abrir_enlace(url):
         exito = webbrowser.open(url)
         
         if exito:
-            print(f"[OK] Navegador abierto en: {url}")
-            return True
+            resultado = f"Navegador abierto en: {url}"
+            return True, resultado
         else:
-            print(f"[ERROR] No se pudo abrir el navegador.")
-            return False
+            resultado = f"No se pudo abrir el navegador o el url es invalido."
+            return False, resultado
             
     except Exception as e:
-        print(f"[EXCEPCIÓN] Error en navegador.py: {e}")
-        return False
+        resultado = f"[EXCEPCIÓN] Error en navegador.py: {e}"
+        return False, resultado

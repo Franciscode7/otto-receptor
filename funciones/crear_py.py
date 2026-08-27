@@ -22,7 +22,9 @@ def obtener_nombre_dinamico(codigo):
 
     # 3. Respaldo por fecha/hora si es un script plano sin funciones ni clases
     timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-    return f"script_{timestamp}.py"
+    nombrescript =  f"script_{timestamp}.py"
+    
+    return nombrescript
 
 
 def crear_python(codigo):
@@ -43,24 +45,11 @@ def crear_python(codigo):
         with open(ruta_completa, "w", encoding="utf-8") as archivo:
             archivo.write(codigo)
 
-        print(f"✅ Archivo guardado en: {ruta_completa}")
-        return ruta_completa
+        resultado = f"✅ Archivo guardado en: {ruta_completa}"
+        
+        return True, resultado
 
     except Exception as e:
-        print(f"❌ Error al guardar el archivo: {e}")
-        return None
-
-# 1. Tu JSON de prueba recibido (o leído desde un webhook/request)
-# json_recibido = """
-# {
-#   "accion": "python",
-#   "valor": "import sys\\nimport os\\n\\ndef saludar():\\n    print('¡Hola! Este es un script de prueba generado por Otto.')\\n    print(f'Ejecutando en la plataforma: {sys.platform}')\\n\\nif __name__ == '__main__':\\n    saludar()\\n"
-# }
-# """
-
-# # 2. Deserializas el JSON (lo que haces antes)
-# datos = json.loads(json_recibido)
-
-# # 3. Extraes el valor y llamas a la función simplificada
-# codigo = datos["valor"]
-# crear_script_python(codigo)
+        resultado = f"❌ Error al guardar el archivo: {e}"
+        
+        return False, resultado

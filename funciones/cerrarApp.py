@@ -6,8 +6,10 @@ def cerrar_app(nombre):
     try:
         # PLAN A: Intentar cierre limpio con AppOpener
         app_close(nombre, match_closest=True, throw_error=True)
-        print(f"[APPS] Cerrado limpio: {nombre}")
-        return True
+        resultado = f"App cerrada correctamente: {nombre}"
+        
+        return True, resultado
+    
     except:
         # PLAN B: Cierre forzado buscando en los procesos del sistema
         print(f"[APPS] AppOpener falló, intentando cierre forzado para: {nombre}")
@@ -23,8 +25,9 @@ def cerrar_app(nombre):
                 continue
         
         if encontrado:
-            print(f"[APPS] Proceso {nombre} terminado por la fuerza.")
-            return True
+            resultado = f"[APPS] Proceso {nombre} terminado por la fuerza."
+            return True, resultado
+        
         else:
-            print(f"[ERROR] No se encontró ningún proceso con el nombre: {nombre}")
-            return False
+            resultado = f"[ERROR] No se encontró ningún proceso con el nombre: {nombre}"
+            return False, resultado

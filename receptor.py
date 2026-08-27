@@ -30,142 +30,136 @@ def recibir_orden():
 
     print(f"Comando recibido del servidor: {accion} -> {valor}")
     
-    if accion == "abrir_url":
-        if valor: # Verificamos que el usuario envió una URL
-            exito = abrir_enlace(valor)
+    match accion:
+        case "abrir_url":
+            if not valor:
+                return jsonify({"status": "error", "msg": "Falta el valor (URL)"}), 400
+            
+            exito, resultado = abrir_enlace(valor)
             if exito:
-                return jsonify({"status": "ok", "msg": f"Abriendo {valor}"}), 200
+                return jsonify({"status": "ok", "msg": resultado}), 200
             else:
-                return jsonify({"status": "error", "msg": "No se pudo abrir el navegador"}), 500
-        else:
-            return jsonify({"status": "error", "msg": "Falta el valor (URL)"}), 400
-
-    elif accion == "youtube":
-        if valor: # Verificamos que el usuario envió una URL
+                return jsonify({"status": "error", "msg": resultado}), 500
+    
+    
+        case "youtube":
+            if not valor:
+                return jsonify({"status": "error", "msg": "Falta el nombre del video"}), 400
+            
             if valor == "pausar":
-                exito = pausar_youtube() 
-                print(f"Pausando reproducción de YouTube: {exito}")
+                exito, resultado = pausar_youtube() 
                 if exito:
-                    return jsonify({"status": "ok", "msg": "Reproducción pausada"}), 200
+                    return jsonify({"status": "ok", "msg": resultado}), 200
                 else:
-                    return jsonify({"status": "error", "msg": "No se pudo pausar la reproducción"}), 404
-                
+                    return jsonify({"status": "error", "msg": resultado}), 404
+           
             else:
-                exito, detalle = buscar_youtube(valor)
-                print('exito')
-                print(exito)
-                print('detalle')
-                print(detalle)
-                time.sleep(0.5)  # Espera un segundo antes de intentar poner la canción
-                pausar_youtube()  # Pausa cualquier reproducción actual
-                time.sleep(0.5)  # Espera un segundo antes de poner la nueva
+                exito, resultado = buscar_youtube(valor)
                 if exito:
-                    return jsonify({"status": "ok", "msg": f"Reproduciendo: {detalle}"}), 200
+                    return jsonify({"status": "ok", "msg": resultado}), 200
                 else:
-                    return jsonify({"status": "error", "msg": detalle}), 404
-        else:
-            return jsonify({"status": "error", "msg": "Falta el nombre del video"}), 400
+                    return jsonify({"status": "error", "msg": resultado}), 404
 
     
-    elif accion == "brillo":
-        if valor: 
-            exito = ajustar_brillo(valor)
+        case "brillo":
+            if not valor:
+                return jsonify({"status": "error", "msg": "Valor inexistente o invalido"}), 400
+                
+            exito, resultado = ajustar_brillo(valor)
             if exito:
-                return jsonify({"status": "ok", "msg": f"Brillo al {valor}%"}), 200
+                return jsonify({"status": "ok", "msg": resultado}), 200
             else:
-                return jsonify({"status": "error", "msg": f"No se pudo ajustar el brillo al {valor}%"}), 500
-        else:
-            return jsonify({"status": "error", "msg": "Valor incorrecto"}), 400
-
-    if accion == "volumen":
-        if valor: # Verificamos que el usuario envió una URL
-            exito = ajustar_volumen(valor)
-            # if exito:
-            return jsonify({"status": "ok", "msg": f"Volumen al {valor}%"}), 200
-            # else:
-            #     return jsonify({"status": "error", "msg": "No se pudo ajustar el volumen"}), 500
-        else:
-            return jsonify({"status": "error", "msg": "Falta el valor (URL)"}), 400
+                return jsonify({"status": "error", "msg": resultado}), 500
 
 
-    elif accion == "nota":
-        if valor: # Verificamos que el usuario envió una URL
-            exito, nota_escrita = escribir_nota(valor)
+        case "volumen":
+            if not valor:
+                return jsonify({"status": "error", "msg": "Valor inexistente o invalido"}), 400
+                
+            exito, resultado = ajustar_volumen(valor)
             if exito:
-                return jsonify({"status": "ok", "msg": f"Nota guardada: {nota_escrita}"}), 200
+                return jsonify({"status": "ok", "msg": resultado}), 200
             else:
-                return jsonify({"status": "error", "msg": "No se pudo escribir la nota"}), 500
-        else:
-            return jsonify({"status": "error", "msg": "Falta el valor"}), 400
+                return jsonify({"status": "error", "msg": resultado}), 500
 
 
-    elif accion == "abrir_app":
-        if valor: # Verificamos que el usuario envió una URL
-            exito = abrir_app(valor)
+        case "nota":
+            if not valor:
+                return jsonify({"status": "error", "msg": "No hay ningun valor para anotar"}), 400
+                
+            exito, resultado = escribir_nota(valor)
             if exito:
-                return jsonify({"status": "ok", "msg": f"App abierta: {valor}"}), 200
+                return jsonify({"status": "ok", "msg": resultado}), 200
             else:
-                return jsonify({"status": "error", "msg": "No se pudo abrir la app"}), 500
-        else:
-            return jsonify({"status": "error", "msg": "Falta el valor (URL)"}), 400
-        
-        
-    elif accion == "cerrar_app":
-        if valor: # Verificamos que el usuario envió una URL
-            exito = cerrar_app(valor)
+                return jsonify({"status": "error", "msg": resultado}), 500
+
+
+        case "abrir_app":
+            if not valor:
+                return jsonify({"status": "error", "msg": "Falta el nombre de la app a abrir"}), 400
+                
+            exito, resultado = abrir_app(valor)
             if exito:
-                return jsonify({"status": "ok", "msg": f"App cerrada: {valor}"}), 200
+                return jsonify({"status": "ok", "msg": {resultado}}), 200
             else:
-                return jsonify({"status": "error", "msg": "No se pudo cerrar la app"}), 500
-        else:
-            return jsonify({"status": "error", "msg": "Falta el valor (URL)"}), 400
-        
-        
-        
-    elif accion == "trabajar":
-            if valor: # Verificamos que el usuario envió un valor
-                buscar_youtube("safety net live ariana grande")
-                time.sleep(1)
-                exito = vscode(valor)
-                if exito:
-                    return jsonify({"status": "ok", "msg": f"🤖 Todo preparado, Se abrió: D:/developer/{valor}"}), 200
-                else:
-                    return jsonify({"status": "error", "msg": "No se pudo procesar"}), 500
-            else:
-                return jsonify({"status": "error", "msg": "Falta el valor"}), 400
-            
-            
-            
-    elif accion == "crear_py":
-        if valor: # Verificamos que el usuario envió un valor
-            exito = crear_python(valor)
+                return jsonify({"status": "error", "msg": resultado}), 500
+
+
+        case "cerrar_app":
+            if not valor:
+                return jsonify({"status": "error", "msg": "Falta el nombre de la app a abrir"}), 400
+                
+            exito, resultado = cerrar_app(valor)
             if exito:
-                print ("logrado")
-                return jsonify({"status": "ok", "msg": f"Scrpt creado: {valor}"}), 200
+                return jsonify({"status": "ok", "msg": resultado}), 200
             else:
-                return jsonify({"status": "error", "msg": "No se pudo crear el archivo"}), 500
-        else:
-            return jsonify({"status": "error", "msg": "Falta el valor"}), 400
+                return jsonify({"status": "error", "msg": resultado}), 500
+
+
+        case "trabajar":
+            if not valor:
+                return jsonify({"status": "error", "msg": "Falta el nombre de la carpeta a abrir"}), 400
+            
+            exito, resultado = vscode(valor)
+            time.sleep(1)
+            buscar_youtube("pov de ariana grande")
+            
+            if exito:
+                return jsonify({"status": "ok", "msg": resultado}), 200
+            else:
+                return jsonify({"status": "error", "msg": resultado}), 500
             
             
-    elif accion == "screenshot":
-        if valor: # Verificamos que el usuario envió un valor
-            exito, img_base64 = capturar_pantalla()
+        case "crear_py":
+            if not valor:
+                return jsonify({"status": "error", "msg": "Falta el script"}), 400
+            
+            exito, resultado = crear_python(valor)
+            if exito:
+                return jsonify({"status": "ok", "msg": resultado}), 200
+            else:
+                return jsonify({"status": "error", "msg": resultado}), 500
         
+        
+        case "screenshot":
+            if not valor:
+                return jsonify({"status": "error", "msg": "Falta el parametro valor"}), 400
+            
+            exito, img_base64, resultado = capturar_pantalla()
             if exito:
                 return jsonify({
                     "status": "ok",
                     "type": "image_base64",
                     "image_base64": img_base64,
-                    "msg": "Captura realizada correctamente"
+                    "msg": resultado
                 }), 200
             
             else:
-                return jsonify({"status": "error", "msg": "No se pudo realizar la captura de pantalla"}), 500         
-        
-        else:
-            return jsonify({"status": "error", "msg": "Falta el valor"}), 400    
+                return jsonify({"status": "error", "msg": resultado}), 500         
 
+        case _:
+            return jsonify({"status": "error", "msg": f"Acción desconocida: {accion}"}), 400
+        
+        
 if __name__ == '__main__':
-    # Ejecuta la terminal como ADMINISTRADOR para que te deje usar el puerto 7777
     app.run(host=os.getenv('HOST'), port=7777)

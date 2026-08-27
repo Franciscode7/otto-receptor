@@ -12,7 +12,11 @@ def vscode(carpeta_proyecto):
     try:
         # shell=True permite que Windows ejecute 'code.cmd' sin fallar
         subprocess.Popen(["code", ruta_completa], shell=True)
-        print(f"VS Code abierto correctamente en: {ruta_completa}")
-        return True
+        resultado = f"VS Code abierto correctamente en: {ruta_completa}"
+        
+        return True, resultado
+    
     except Exception as e:
-        print(f"Error al abrir VS Code: {e}")
+        
+        resultado = f"Error al abrir VS Code: {e}"
+        return True, resultado
